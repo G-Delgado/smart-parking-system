@@ -23,6 +23,7 @@ public class Program // Cambiado a 'public'
         builder.Services.AddSingleton<IIotDeviceRepository, IotDeviceRepository>();
         builder.Services.AddSingleton<IIoTDeviceService,IoTDeviceService>();
 
+
         // Configure Authentication
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
@@ -46,9 +47,13 @@ public class Program // Cambiado a 'public'
 
         var app = builder.Build();
 
-        // Configure the HTTP request pipeline.
-        app.UseSwagger();
-        app.UseSwaggerUI();
+        app.Urls.Add("http://localhost:5000");
+
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI();
+        }
 
         app.UseHttpsRedirection();
         app.UseAuthentication();
