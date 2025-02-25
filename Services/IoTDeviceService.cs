@@ -1,16 +1,24 @@
 public class IoTDeviceService : IIoTDeviceService
 {
-    private readonly IIotDeviceRepository _devices;
+    private readonly IIotDeviceRepository _repository;
+
+    private readonly IParkingRepository _parkingRepository;
+
+    public IoTDeviceService(IIotDeviceRepository repository, IParkingRepository parkingRepository)
+    {
+        _repository = repository;
+        _parkingRepository = parkingRepository;
+    }
 
 
     public List<IoTDevice> GetAllDevices()
     {
-        _devices.
+        return _repository.GetAll();
     }
 
     public IoTDevice? GetDeviceById(Guid id)
     {
-        throw new NotImplementedException();
+        return _repository.GetById(id);
     }
 
     public IoTDevice AddDevice(CreateIoTDeviceDTO deviceDto)
@@ -22,22 +30,34 @@ public class IoTDeviceService : IIoTDeviceService
             ApiKey = Guid.NewGuid().ToString()
         };
 
-        _devices.Add(device);
+        _repository.Add(device);
         return device;
     }
 
     public bool RemoveDevice(Guid id)
     {
-        throw new NotImplementedException();
+        _repository.Remove(id);
+        return true;
     }
 
     public bool UpdateDevice(Guid id, IoTDeviceDTO deviceDto)
     {
-        throw new NotImplementedException();
+        // Get Parking Spot By Id
+        var parkingSpot = _parkingRepository.GetById(deviceDto.ParkingSpotId);
+        if (parkingSpot == null) return false;
+
+        _repository.Update(new IoTDevice
+        {
+            Id = id,
+            Name = deviceDto.Name,
+            ParkingSpotAssigned = parkingSpot
+        });
+
+        return true;
     }
 
     public bool ValidateApiKey(string apiKey)
     {
-        return _devices.Any(d => d.ApiKey == apiKey);
+        return _repository.GetAll().Any(d => d.ApiKey == apiKey);
     }
 }

@@ -4,6 +4,6 @@ public class ParkingSpot
 
     public ParkingState State { get; set; }
 
-    public IoTDevice? IotDeviceAssigned { get; set; }
+    public required IoTDevice IotDeviceAssigned { get; set; }
     
 }
