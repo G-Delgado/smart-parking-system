@@ -1,0 +1,53 @@
+# Visual Studio y Rider
+.vscode/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.cache
+*.VC.db
+
+# Archivos binarios y de compilación
+bin/
+obj/
+out/
+*.exe
+*.dll
+*.pdb
+*.cache
+*.log
+
+# Paquetes y dependencias
+packages/
+node_modules/
+
+# Configuración de usuario local
+*.vs/
+*.swp
+*.swo
+
+# Archivos de seguridad y credenciales
+secrets.json
+appsettings.Development.json
+appsettings.Local.json
+*.pfx
+*.cer
+
+# SQLite Database
+*.db
+*.sqlite
+*.sqlite3
+*.db-shm
+*.db-wal
+
+# Archivos de prueba y cobertura de código
+TestResults/
+coverage/
+*.trx
+*.coverage
+*.codecoverage
+logs/
+
+# Archivos de Docker
+docker-compose.override.yml
+.env
