@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 [Route("api/parking-spots")]
 public class ParkingController : ControllerBase
 {
-    private readonly ParkingService _service;
+    private readonly IParkingService _service;
 
-    public ParkingController(ParkingService service)
+    public ParkingController(IParkingService service)
     {
         _service = service;
     }
@@ -14,15 +14,15 @@ public class ParkingController : ControllerBase
     [HttpGet]
     public IActionResult GetAll() => Ok(_service.GetAllSpots());
 
-    [HttpPost("{id}/occupy")]
+    [HttpPut("{id}/occupy")]
     public IActionResult OccupySpot(Guid id, [FromBody] CreateParkingSpotDTO request)
     {
         if (_service.OccupySpot(id, request.DeviceId))
             return NoContent();
         return BadRequest("Cannot occupy this spot.");
     }
-
-    [HttpPost("{id}/free")]
+    
+    [HttpPut("{id}/free")]
     public IActionResult FreeSpot(Guid id, [FromBody] CreateParkingSpotDTO request)
     {
         if (_service.FreeSpot(id, request.DeviceId))

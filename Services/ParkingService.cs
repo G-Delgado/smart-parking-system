@@ -1,4 +1,4 @@
-public class ParkingService
+public class ParkingService : IParkingService
 {
     private readonly IParkingRepository _repository;
     

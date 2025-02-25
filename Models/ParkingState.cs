@@ -1,0 +1,4 @@
+enum ParkingState {
+    Free,
+    Occupied
+}
