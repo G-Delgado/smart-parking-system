@@ -1,6 +1,8 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 [ApiController]
 [Route("api/iot-devices")]
+[Authorize(Roles = "Admin")]
 public class IoTDeviceController : ControllerBase
 {
     private readonly IIoTDeviceService _service;
