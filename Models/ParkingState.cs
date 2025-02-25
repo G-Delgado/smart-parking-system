@@ -1,4 +1,4 @@
-enum ParkingState {
+public enum ParkingState {
     Free,
     Occupied
 }

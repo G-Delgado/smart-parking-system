@@ -11,8 +11,8 @@ public class ParkingRepository : IParkingRepository
         var existingSpot = GetById(spot.Id);
         if (existingSpot != null)
         {
-            existingSpot.IsOccupied = spot.IsOccupied;
-            existingSpot.OccupiedByDevice = spot.OccupiedByDevice;
+            existingSpot.State = spot.State;
+            existingSpot.IotDeviceAssigned = spot.IotDeviceAssigned;
         }
     }
 }

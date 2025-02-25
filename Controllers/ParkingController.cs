@@ -18,7 +18,7 @@ public class ParkingController : ControllerBase
     public IActionResult OccupySpot(Guid id, [FromBody] CreateParkingSpotDTO request)
     {
         if (_service.OccupySpot(id, request.DeviceId))
-            return NoContent();
+            return Ok("Spot occupied.");
         return BadRequest("Cannot occupy this spot.");
     }
     
@@ -26,21 +26,21 @@ public class ParkingController : ControllerBase
     public IActionResult FreeSpot(Guid id, [FromBody] CreateParkingSpotDTO request)
     {
         if (_service.FreeSpot(id, request.DeviceId))
-            return NoContent();
+            return Ok("Spot freed.");
         return BadRequest("Cannot free this spot.");
     }
 
     [HttpPost]
-    public IActionResult AddSpot()
+    public IActionResult AddSpot([FromBody] CreateParkingSpotDTO request)
     {
         _service.AddSpot();
-        return Ok();
+        return Ok("Spot added.");
     }
 
     [HttpDelete("{id}")]
     public IActionResult RemoveSpot(Guid id)
     {
         _service.RemoveSpot(id);
-        return NoContent();
+        return Ok("Spot removed.");
     }
 }
