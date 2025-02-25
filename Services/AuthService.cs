@@ -8,13 +8,11 @@ public class AuthService : IAuthService
     private readonly IUserRepository _userRepository;
     private readonly IConfiguration _configuration;
 
-    private readonly JwtSettings _jwtSettings;
 
-    public AuthService(IUserRepository userRepository, IConfiguration configuration, JwtSettings jwtSettings)
+    public AuthService(IUserRepository userRepository, IConfiguration configuration)
     {
         _userRepository = userRepository;
         _configuration = configuration;
-        _jwtSettings = jwtSettings;
     }
 
     public string Authenticate(string username, string password)
@@ -29,9 +27,9 @@ public class AuthService : IAuthService
         // Crear claims para el token
         var claims = new[]
         {
-            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new Claim(ClaimTypes.Name, user.Username),
-            new Claim(ClaimTypes.Role, user.ActualRole.ToString())
+            new Claim("identifier", user.Id.ToString()),
+            new Claim("name", user.Username),
+            new Claim("role", user.ActualRole.ToString())
         };
 
         // Obtener clave secreta del archivo de configuración

@@ -21,10 +21,13 @@ public class ParkingService : IParkingService
     public bool OccupySpot(Guid id, Guid deviceId)
     {
         var spot = _repository.GetById(id);
-        if (spot == null || spot.IotDeviceAssigned != null || (spot.IotDeviceAssigned != null && spot.IotDeviceAssigned.Id != deviceId)) return false;
+        Console.WriteLine(spot?.IotDeviceAssigned.Id);
+        Console.WriteLine("incoming " + deviceId);
+        if (spot == null || spot.IotDeviceAssigned?.Id != deviceId || spot.State == ParkingState.Occupied) return false;
         
         spot.State = ParkingState.Occupied;
         // spot.IotDeviceAssigned = deviceId;
+        Console.WriteLine("Got here...");
         _repository.Update(spot);
         return true;
     }
@@ -33,7 +36,7 @@ public class ParkingService : IParkingService
     {
         var spot = _repository.GetById(id);
         var device = _deviceRepository.GetById(deviceId);
-        if (spot == null || spot.State == ParkingState.Free || (spot.IotDeviceAssigned != null && spot.IotDeviceAssigned.Id != deviceId)) return false;
+        if (spot == null || spot.State == ParkingState.Free || spot.IotDeviceAssigned?.Id != deviceId) return false;
         
         spot.State = ParkingState.Free;
         //spot.OccupiedByDevice = null;
@@ -56,6 +59,9 @@ public class ParkingService : IParkingService
         device.ParkingSpotAssigned = spot;
         _deviceRepository.Update(device);
         _repository.Add(spot);
+
+        Console.WriteLine("Spot added: ");
+        Console.WriteLine(device.Id);
 
         return true;
     } 

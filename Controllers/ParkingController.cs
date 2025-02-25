@@ -33,7 +33,7 @@ public class ParkingController : ControllerBase
     [HttpPost]
     public IActionResult AddSpot([FromBody] CreateParkingSpotDTO request)
     {
-        _service.AddSpot();
+        _service.AddSpot(request);
         return Ok("Spot added.");
     }
 

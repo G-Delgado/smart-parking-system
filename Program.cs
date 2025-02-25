@@ -1,6 +1,7 @@
 using DotNetEnv;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,26 +9,15 @@ var builder = WebApplication.CreateBuilder(args);
 Env.Load(); // Load environment variables from .env file
 
 // Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 builder.Services.AddSingleton<IParkingRepository, ParkingRepository>();
-builder.Services.AddSingleton<ParkingService>();
+builder.Services.AddSingleton<IParkingService,ParkingService>();
 builder.Services.AddSingleton<IUserRepository, UserRepository>();
-builder.Services.AddSingleton<AuthService>();
+builder.Services.AddSingleton<IAuthService,AuthService>();
 builder.Services.AddSingleton<IIotDeviceRepository, IotDeviceRepository>();
-builder.Services.AddSingleton<IoTDeviceService>();
-
-var jwtSecretKey = Environment.GetEnvironmentVariable("JWT_SECRET_KEY");
-
-builder.Services.Configure<JwtSettings>(options =>
-{
-    options.Key = jwtSecretKey;
-    options.Issuer = builder.Configuration["Jwt:Issuer"];
-    options.Audience = builder.Configuration["Jwt:Audience"];
-});
-
+builder.Services.AddSingleton<IIoTDeviceService,IoTDeviceService>();
 
 // Configure Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -38,9 +28,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuer = true,
             ValidateAudience = true,
             ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
             ValidIssuer = builder.Configuration["Jwt:Issuer"],
             ValidAudience = builder.Configuration["Jwt:Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])),
         };
     });
 
@@ -55,9 +46,9 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 
-app.UseAuthorization();
-app.UseAuthentication();
-app.MapControllers();
 app.UseHttpsRedirection();
+app.UseAuthentication();
+app.UseAuthorization();
 
+app.MapControllers();
 app.Run();

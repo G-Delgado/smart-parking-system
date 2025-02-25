@@ -12,13 +12,13 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("login")]
-    public IActionResult Login([FromBody] LoginRequest request)
+    public IActionResult Login([FromBody] LoginUserDTO request)
     {
         var token = _authService.Authenticate(request.Username, request.Password);
 
         if (string.IsNullOrEmpty(token))
             return Unauthorized(new { message = "Invalid credentials" });
 
-        return Ok(new { token });
+        return Ok(new UserDTO { Username = request.Username, Token = token });
     }
 }
